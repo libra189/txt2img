@@ -1,0 +1,40 @@
+"prompt":
+    # - Ultra realistic photo portrait of beuty woman # 顔から肩まで
+    - "{{Ultra realistic photo of beautiful young girl}}"
+    - masterpiece
+    - best quality
+    - CG
+    - wallpaper
+    - HDR
+    - high quality
+    - high-definition
+    - extremely detailed
+    - "{beautiful detailed eyes}"
+    - "{from below}"
+    - (detailed light)
+    - "intricate detail"
+    - "{highres}"
+    - Jewel-like eyes
+    - "floating hair"
+    - long hair
+    # - "{flowers}"
+    # - sunlight
+    - "{surrounded by floating petal}"
+"negative_prompt":
+    - lowres
+    - (bad anatomy, bad hands:1.1)
+    - text
+    - error
+    - missing fingers
+    - extra digit
+    - fewer digits
+    - cropped
+    - worst quality
+    - low quality
+    - normal quality
+    - jpeg artifacts
+    - blurry
+    - b&w
+    - weird colors
+    - (cartoon, 3d, bad art, poorly drawn, close up, blurry:1.5)
+    - (disfigured, deformed, extra limbs:1.5)
