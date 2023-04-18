@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "txt2img"
+version = "0.1.0"
+description = ""
+authors = ["libra189 <libra189@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.10"
+setuptools = "58.3.0"
+Cython = "^0.29.34"
+transformers = "^4.28.1"
+diffusers = "^0.15.1"
+accelerate = "^0.18.0"
+scipy = "^1.10.1"
+safetensors = "^0.3.0"
+
+[tool.poetry.dev-dependencies]
+black = "^23.3.0"
+isort = "^5.12.0"
+taskipy = "^1.10.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+exe = "poetry run python main.py"
+fmt = "poetry run task __black; poetry run task __isort"
+__black = "black main.py; black lib/*.py"
+__isort = "isort main.py; isort lib/*.py"
