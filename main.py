@@ -1,6 +1,8 @@
 import os
-import yaml
 from datetime import datetime
+
+import yaml
+
 from lib.txt2img import Txt2Img
 
 

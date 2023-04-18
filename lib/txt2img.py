@@ -1,9 +1,10 @@
 import os
-import torch
-import time
 import pprint
-from diffusers import StableDiffusionPipeline
+import time
 from datetime import datetime
+
+import torch
+from diffusers import StableDiffusionPipeline
 from diffusers.pipelines.stable_diffusion import safety_checker
 
 
@@ -106,7 +107,7 @@ class Txt2Img:
 
         generator = torch.Generator(device=self.device)
         img_seed = self.seed
-        if self.seed is 0:
+        if self.seed == 0:
             img_seed = generator.seed()
 
         generator = generator.manual_seed(img_seed)
