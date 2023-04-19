@@ -1,6 +1,7 @@
 "prompt":
     # - Ultra realistic photo portrait of beuty woman # 顔から肩まで
-    - "{{Ultra realistic photo of beautiful young girl}}"
+    - "{{Ultra realistic picture of beautiful girl}}"
+    - nsfw
     - masterpiece
     - best quality
     - CG
@@ -16,7 +17,8 @@
     - "{highres}"
     - Jewel-like eyes
     - "floating hair"
-    - long hair
+    - backless dress
+    # - long hair
     # - "{flowers}"
     # - sunlight
     - "{surrounded by floating petal}"

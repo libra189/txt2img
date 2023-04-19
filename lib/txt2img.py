@@ -1,5 +1,4 @@
 import os
-import pprint
 import time
 from datetime import datetime
 
@@ -60,7 +59,7 @@ class Txt2Img:
             self.model_id,
             low_cpu_mem_usage=self.low_cpu_mem_usage,
             revision=self.revision,
-            vae=vae,
+            vae=vae, # FixMe: 警告が多いため一時的にコメントアウト
             # custom_pipeline="lpw_stable_diffusion",  # プロンプトの長文対応
         ).to(self.device)
 
@@ -74,6 +73,7 @@ class Txt2Img:
         prompt: str,
         negative: str = "",
         n: int = 1,
+        file_name: str = "",
     ) -> list[str]:
         """指定回数
 
@@ -81,12 +81,17 @@ class Txt2Img:
             prompt (str): 画像生成テキスト
             negative (str, optional): ネガティブプロンプト. Defaults to "".
             n (int, optional): 生成回数. Defaults to 1
+            file_name (str, optional): 出力画像のファイル名. Defaults to "".
         """
 
         outputs: list[str] = []
         num = 1
         while True:
-            file_path = self.__exec(prompt, negative)
+            img_name = file_name
+            if (len(img_name) > 0 and n > 1):
+                img_name = f"{str(num).zfill(3)}_{img_name}"
+
+            file_path = self.__exec(prompt, negative, img_name)
             outputs.append(file_path)
             num += 1
 
@@ -100,13 +105,15 @@ class Txt2Img:
     def __exec(
         self,
         prompt: str,
-        negative: str = "",
+        negative: str,
+        img_name: str
     ) -> str:
         """テキストから画像生成
 
         Args:
-            prompt (str): 画像生成テキスト
-            negative (str, optional): ネガティブプロンプト. Defaults to "".
+            prompt (str): 画像生成テキスト.
+            negative (str, optional): ネガティブプロンプト.
+            img_name (str, optional): 出力画像のファイル名.
 
         Returns:
             str: 出力ファイル名
@@ -137,12 +144,16 @@ class Txt2Img:
             height=self.height,
             generator=generator,
             guidance_scale=self.scale,
-            # max_embeddings_multiples=2,  # プロンプトの長文対応
+            # max_embeddings_multiples=10,  # プロンプトの長文対応
         ).images[0]
 
         try:
-            now = datetime.now().strftime("%m%d%H%M")
-            file_path = os.path.join(self.output_dir, f"{now}_{img_seed}.png")
+            if len(img_name) > 0:
+                file_path = os.path.join(self.output_dir, f"{img_name}.png")
+            else:
+                now = datetime.now().strftime("%m%d%H%M")
+                file_path = os.path.join(self.output_dir, f"{now}_{img_seed}.png")
+
             image.save(file_path)
             return file_path
         except:
