@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 
 import torch
+from diffusers.models import AutoencoderKL
 from diffusers import StableDiffusionPipeline
 from diffusers.pipelines.stable_diffusion import safety_checker
 
@@ -14,6 +15,7 @@ class Txt2Img:
     def __init__(
         self,
         model_id: str = "hakurei/waifu-diffusion",
+        vae: str = "stabilityai/sd-vae-ft-mse",
         width: int = 400,
         height: int = 400,
         seed: int = 0,
@@ -24,10 +26,11 @@ class Txt2Img:
         scale: float = 11.0,
         output_dir: str = "./",
     ) -> None:
-        """_summary_
+        """AIモデル、処理設定、生成する画像の設定
 
         Args:
             model_id (str, optional): AIモデル. Defaults to "hakurei/waifu-diffusion".
+            vae (str, optional): 画質を向上するための改良オートエンコーダー. Defaults to "stabilityai/sd-vae-ft-mse".
             width (int, optional): 横幅(px). Defaults to 400.
             height (int, optional): 縦幅(px). Defaults to 400.
             seed (int, optional): 乱数生成シード.デフォルトの場合、乱数を自動生成. Defaults to 0.
@@ -38,7 +41,10 @@ class Txt2Img:
             guidance_scale (float, optional): プロンプトへの従属度.大きすぎると破綻する. Defaults to 11.0.
             output_dir (str, optional): 出力ディレクトリ名. Defaults to "./".
         """
+        # ToDo: 引数のバリデーション
+
         self.model_id = model_id
+        self.vae = vae
         self.width = width
         self.height = height
         self.seed = seed
@@ -49,10 +55,12 @@ class Txt2Img:
         self.scale = scale
         self.output_dir = output_dir
 
+        vae = AutoencoderKL.from_pretrained(self.vae)
         self.pipe = StableDiffusionPipeline.from_pretrained(
             self.model_id,
             low_cpu_mem_usage=self.low_cpu_mem_usage,
             revision=self.revision,
+            vae=vae,
             # custom_pipeline="lpw_stable_diffusion",  # プロンプトの長文対応
         ).to(self.device)
 
@@ -66,7 +74,7 @@ class Txt2Img:
         prompt: str,
         negative: str = "",
         n: int = 1,
-    ) -> None:
+    ) -> list[str]:
         """指定回数
 
         Args:
@@ -87,8 +95,7 @@ class Txt2Img:
             else:
                 time.sleep(3)
 
-        print("Output files:")
-        pprint.pprint(outputs)
+        return outputs
 
     def __exec(
         self,
@@ -112,14 +119,15 @@ class Txt2Img:
 
         generator = generator.manual_seed(img_seed)
 
-        config = {
-            "prompt": prompt,
-            "negative_prompt": negative,
-            "seed": img_seed,
-            "scale": self.scale,
-            "steps": self.steps,
-        }
-        pprint.pprint(config)
+        # ToDo： 設定出力はデバックモードのみ
+        # config = {
+        #     "prompt": prompt,
+        #     "negative_prompt": negative,
+        #     "seed": img_seed,
+        #     "scale": self.scale,
+        #     "steps": self.steps,
+        # }
+        # pprint.pprint(config)
 
         image = self.pipe(
             prompt,

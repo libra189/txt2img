@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from pprint import pprint
 
 import yaml
 
@@ -23,9 +24,13 @@ def main():
     prompt = ",".join(config["prompt"])
     negative_prompt = ",".join(config["negative_prompt"])
 
-    agent = Txt2Img(output_dir=output_dir)
-    agent.gen(prompt, negative=negative_prompt, n=1)
+    # ToDo: プロンプトのトークン長チェック.78以上の場合は長文対応処理判定を追加する
 
+    agent = Txt2Img(output_dir=output_dir)
+    files = agent.gen(prompt, negative=negative_prompt, n=1)
+
+    print("Output files:")
+    pprint(files)
 
 if __name__ == "__main__":
     main()

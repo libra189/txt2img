@@ -71,4 +71,9 @@ __pypackages__/
 # Generated image directory
 img/*
 !img/.keep
+
+#
+nohup.out
+__*
+
 # End of https://www.toptal.com/developers/gitignore/api/pythonvanilla
